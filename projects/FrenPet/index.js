@@ -1,22 +1,14 @@
-const MINT_TOKEN_CONTRACT = '0x1f3Af095CDa17d63cad238358837321e95FC5915';
-const MINT_CLUB_BOND_CONTRACT = '0x8BBac0C7583Cc146244a18863E708bFFbbF19975';
+const { sumTokens2, nullAddress } = require('../helper/unwrapLPs')
 
-async function tvl(_, _1, _2, { api }) {
-  const collateralBalance = await api.call({
-    abi: 'erc20:balanceOf',
-    target: MINT_TOKEN_CONTRACT,
-    params: [MINT_CLUB_BOND_CONTRACT],
-  });
+const contract = "0x0e22B5f3E11944578b37ED04F5312Dfc246f443C"
 
-  api.add(MINT_TOKEN_CONTRACT, collateralBalance)
+async function tvl(time, ethBlock, _b, {api}) {
+  return sumTokens2({ tokens: [nullAddress], owner: contract, api })
 }
 
 module.exports = {
-  timetravel: true,
-  misrepresentedTokens: false,
-  methodology: 'counts the number of MINT tokens in the Club Bonding contract.',
-  start: 1000235,
-  bsc: {
-    tvl,
+  methodology: `We count the ETH on ${contract}`,
+  base: {
+    tvl
   }
-}; 
+}
